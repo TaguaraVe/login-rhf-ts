@@ -31,7 +31,6 @@ export const LoginScreen = () => {
   });
 
   const handleLogin = (data) => {
-    console.warn('Haciendo Login');
     navigation.navigate('Home');
   };
 

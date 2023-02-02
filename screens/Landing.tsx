@@ -9,10 +9,14 @@ import {
 
 import { useNavigation } from '@react-navigation/native';
 
-import miImagen from '../assets/images/home1.jpg';
+import miImagen from '../assets/images/home2.jpg';
 
-export function HomeScreen() {
+export function LandingScreen() {
   const navigation = useNavigation();
+
+  const onPressLogin = (): void => {
+    navigation.navigate('Login');
+  };
 
   return (
     <ScrollView>
@@ -24,11 +28,9 @@ export function HomeScreen() {
         />
         <View style={styles.buttonContainer}>
           <Button
-            onPress={() => {
-              navigation.navigate('Landing');
-            }}
-            title="Cerrar Sesión"
-            color="purple"
+            onPress={onPressLogin}
+            title="Ingresar"
+            color="#841584"
             accessibilityLabel="Learn more about this purple button"
           />
         </View>

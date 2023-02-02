@@ -8,6 +8,7 @@ import { RegisterScreen } from '../screens/Register';
 import { ResetPasswordScreen } from '../screens/ResetPassword';
 import { ForgotPasswordScreen } from '../screens/ForgotPassword';
 import { ConfirmEmailScreen } from '../screens/ConfirmEmail';
+import { LandingScreen } from '../screens/Landing';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,9 +19,14 @@ export const Navigation = (props: Props) => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen
+          name="Landing"
+          component={LandingScreen}
+          options={{ title: 'Welcome to FindYourDreamJob' }}
+        />
+        <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: 'Welcome to FindYourDreamJob' }}
+          options={{ title: 'Home' }}
         />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
