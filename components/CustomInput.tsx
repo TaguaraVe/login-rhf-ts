@@ -2,7 +2,12 @@ import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { Controller } from 'react-hook-form';
 
-type Props = {};
+type Props = {
+  name: string;
+  control: any;
+  placeholder: string;
+  secureTextEntry: string;
+};
 
 export const CustomInput = ({
   name,

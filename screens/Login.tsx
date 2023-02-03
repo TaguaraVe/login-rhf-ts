@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
@@ -18,13 +19,19 @@ const schema = yup
   })
   .required();
 
+type FormValues = {
+  password: string;
+  email: string;
+};
+
 export const LoginScreen = () => {
+  const [loginRes, setLoginRes] = useState('');
   const navigation = useNavigation();
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormValues>({
     defaultValues: {
       email: '',
       password: '',
@@ -32,10 +39,14 @@ export const LoginScreen = () => {
     resolver: yupResolver(schema),
   });
 
-  const handleLogin = (data) => {
-    const loginResult = login(data);
-    console.log(loginResult);
-    navigation.navigate('Home');
+  const handleLogin = async (data: FormValues) => {
+    const loginResult = await login(data);
+
+    if (loginResult.success) {
+      navigation.navigate('Home');
+    } else {
+      setLoginRes(loginResult.msg);
+    }
   };
 
   const goToRegister = () => {
@@ -51,6 +62,12 @@ export const LoginScreen = () => {
       <View style={styles.container}>
         <Image source={logo} style={styles.logo} />
         <Text style={styles.title}>INGRESAR</Text>
+
+        {loginRes && (
+          <View style={styles.errorMsg}>
+            <Text style={styles.errorText}> {loginRes}</Text>
+          </View>
+        )}
 
         <CustomInput name="email" control={control} placeholder="email" />
         <CustomInput
@@ -108,5 +125,15 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginBottom: 50,
+  },
+  errorMsg: {
+    width: '70%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'purple',
+  },
+  errorText: {
+    color: 'white',
+    padding: 5,
   },
 });
