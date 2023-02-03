@@ -9,6 +9,8 @@ import { CustomInput } from '../components/CustomInput';
 import { CustomButton } from '../components/CustomButton';
 import SocialLoging from '../components/SocialLoging';
 
+import { login } from '../services/login';
+
 const schema = yup
   .object({
     email: yup.string().email('Email invalido').required('Requerido'),
@@ -31,6 +33,8 @@ export const LoginScreen = () => {
   });
 
   const handleLogin = (data) => {
+    const loginResult = login(data);
+    console.log(loginResult);
     navigation.navigate('Home');
   };
 
