@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
@@ -10,7 +10,8 @@ import { CustomInput } from '../components/CustomInput';
 import { CustomButton } from '../components/CustomButton';
 import SocialLoging from '../components/SocialLoging';
 
-import { login } from '../services/login';
+import { useLogin } from '../hooks/useLogin';
+import { UserContext } from '../GlobalStates/userContext';
 
 const schema = yup
   .object({
@@ -25,6 +26,8 @@ type FormValues = {
 };
 
 export const LoginScreen = () => {
+  const { setCurrentUser } = useContext(UserContext);
+
   const [loginRes, setLoginRes] = useState('');
   const navigation = useNavigation();
   const {
@@ -40,9 +43,14 @@ export const LoginScreen = () => {
   });
 
   const handleLogin = async (data: FormValues) => {
-    const loginResult = await login(data);
-
+    const loginResult = await useLogin(data);
     if (loginResult.success) {
+      setCurrentUser({
+        email: loginResult.email,
+        firstname: loginResult.firstname,
+        lastname: loginResult.lastname,
+        token: loginResult.token,
+      });
       navigation.navigate('Home');
     } else {
       setLoginRes(loginResult.msg);

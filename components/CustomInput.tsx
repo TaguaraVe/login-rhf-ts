@@ -6,14 +6,14 @@ type Props = {
   name: string;
   control: any;
   placeholder: string;
-  secureTextEntry: string;
+  secureTextEntry?: boolean;
 };
 
 export const CustomInput = ({
   name,
   control,
   placeholder,
-  secureTextEntry,
+  secureTextEntry = false,
 }: Props) => {
   return (
     <Controller

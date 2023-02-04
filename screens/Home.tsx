@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import {
   Button,
   View,
@@ -5,14 +6,17 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
+  Text,
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
 import miImagen from '../assets/images/home1.jpg';
+import { UserContext } from '../GlobalStates/userContext';
 
 export function HomeScreen() {
   const navigation = useNavigation();
+  const { currentUser } = useContext(UserContext);
 
   return (
     <ScrollView>
@@ -22,6 +26,11 @@ export function HomeScreen() {
           style={styles.image}
           PlaceholderContent={<ActivityIndicator />}
         />
+        <View>
+          <Text> Bienvenido : {currentUser.firstname}</Text>
+          <Text> Apellido: {currentUser.lastname}</Text>
+          <Text> Correo: {currentUser.email}</Text>
+        </View>
         <View style={styles.buttonContainer}>
           <Button
             onPress={() => {

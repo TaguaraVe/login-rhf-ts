@@ -10,11 +10,21 @@ import { CustomInput } from '../components/CustomInput';
 import { CustomButton } from '../components/CustomButton';
 import SocialLoging from '../components/SocialLoging';
 
+import { useRegister } from '../hooks/useRegister';
+
+import { regExp } from '../utils/regExp';
 const schema = yup
   .object({
-    userName: yup.string().required('Requerido'),
+    firstname: yup.string().required('Requerido'),
+    lastname: yup.string().required('Requerido'),
     email: yup.string().email('Email invalido').required('Requerido'),
-    password: yup.string().required('Debe de indicar la clave'),
+    password: yup
+      .string()
+      .required('Obligatorio')
+      .matches(
+        regExp.password,
+        'debe tener entre 4 y 8 caracteres al menos una Mayuscula y un numero'
+      ),
     pwdConfirm: yup
       .string()
       .oneOf([yup.ref('password')], 'Las claves no coinciden')
@@ -22,17 +32,26 @@ const schema = yup
   })
   .required();
 
-type Props = {};
+type FormValues = {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  pwdConfirm: string;
+};
+
 export const RegisterScreen = () => {
+  const [registerRes, setRegisterRes] = useState('');
   const navigation = useNavigation();
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormValues>({
     defaultValues: {
       email: '',
-      userName: '',
+      firstname: '',
+      lastname: '',
       password: '',
       pwdConfirm: '',
     },
@@ -42,7 +61,13 @@ export const RegisterScreen = () => {
   const goToLogin = () => {
     navigation.navigate('Login');
   };
-  const handleRegister = () => {
+  const handleRegister = async (data: FormValues) => {
+    const registerResult = await useRegister(data);
+    if (registerResult.success) {
+      navigation.navigate('Home');
+    } else {
+      setRegisterRes(registerResult.msg);
+    }
     console.warn('Creand el user');
   };
 
@@ -55,10 +80,22 @@ export const RegisterScreen = () => {
       <View style={styles.container}>
         <Image source={logo} style={styles.logo} />
         <Text style={styles.title}>CREAR CUENTA</Text>
+
+        {registerRes && (
+          <View style={styles.errorMsg}>
+            <Text style={styles.errorText}> {registerRes}</Text>
+          </View>
+        )}
+
         <CustomInput
-          name="userName"
+          name="firstname"
           control={control}
           placeholder="Nombre del Usuario"
+        />
+        <CustomInput
+          name="lastname"
+          control={control}
+          placeholder="Apellidos"
         />
         <CustomInput name="email" control={control} placeholder="Email" />
 
@@ -128,5 +165,15 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginBottom: 50,
+  },
+  errorMsg: {
+    width: '70%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'purple',
+  },
+  errorText: {
+    color: 'white',
+    padding: 5,
   },
 });
